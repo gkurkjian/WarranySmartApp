@@ -99,24 +99,26 @@ export default function Home() {
   }
 
   return (
-    <main style={{ maxWidth: 900, margin: "0 auto", padding: 16, fontFamily: "system-ui" }}>
-      <h1 style={{ marginBottom: 8 }}>Warranty Smart App (MVP)</h1>
-      <p style={{ marginTop: 0, opacity: 0.75 }}>
-        Add warranties, search, filter, and keep them saved locally.
-      </p>
+    <div bg-white p-4 rounded-4 shadow-sm>
+      <main style={{ maxWidth: 900, margin: "0 auto", padding: 16, fontFamily: "system-ui" }}>
+        <h1 style={{ marginBottom: 8 }}>Warranty Smart App (MVP)</h1>
+        <p style={{ marginTop: 0, opacity: 0.75 }}>
+          Add warranties, search, filter, and keep them saved locally.
+        </p>
 
-      <WarrantyForm form={form} onChange={handleChange} onSubmit={addItem} categories={CATEGORIES} />
+        <WarrantyForm form={form} onChange={handleChange} onSubmit={addItem} categories={CATEGORIES} />
 
-      <FiltersBar
-        search={search}
-        setSearch={setSearch}
-        category={category}
-        setCategory={setCategory}
-        categories={CATEGORIES}
-        count={filteredItems.length}
-      />
+        <FiltersBar
+          search={search}
+          setSearch={setSearch}
+          category={category}
+          setCategory={setCategory}
+          categories={CATEGORIES}
+          count={filteredItems.length}
+        />
 
-      <WarrantyList items={filteredItems} onDelete={deleteItem} />
-    </main>
+        <WarrantyList items={filteredItems} onDelete={deleteItem} />
+      </main>
+    </div>
   );
 }
