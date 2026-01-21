@@ -1,18 +1,20 @@
-'use client';
+import Link from "next/link";
+import { Container, Nav, Navbar } from "react-bootstrap";
 
-import { Navbar, Container, Nav } from 'react-bootstrap';
-import Link from 'next/link';
-
-export default function CustomNavbar() {
+export default function CostumeNavBar() {
   return (
-    <Navbar bg="light" variant="dark" expand="lg">
+    <Navbar bg="dark" variant="dark" expand="lg" sticky="top">
       <Container>
-        <Link href="/" className="navbar-brand">Home Page</Link>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
+        <Navbar.Brand as={Link} href="/">
+          WarrantySmart
+        </Navbar.Brand>
+
+        <Navbar.Toggle aria-controls="main-nav" />
+        <Navbar.Collapse id="main-nav">
           <Nav className="ms-auto">
-            <Link href="/about" className="nav-link">About</Link>
-            <Link href="/myItems" className="nav-link">MyItems</Link>
+            <Nav.Link as={Link} href="/">Home</Nav.Link>
+            <Nav.Link as={Link} href="/about">About</Nav.Link>
+            <Nav.Link as={Link} href="/myitems">My Items</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>

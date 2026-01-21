@@ -1,10 +1,12 @@
-import "@/styles/globals.css";
-import CustomNavbar from "@/components/CostumeNavBar";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "../styles/globals.css"; // keep yours if you have it
+
+import CostumeNavBar from "../components/CostumeNavBar";
 
 export default function App({ Component, pageProps }) {
   return (
     <>
-      <CustomNavbar />
+      <CostumeNavBar />
       <Component {...pageProps} />
     </>
   );
