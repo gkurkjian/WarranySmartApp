@@ -1,4 +1,4 @@
-export default function WarrantyForm({ form, onChange, onSubmit, categories }) {
+export default function WarrantyForm({ form, onChange, onSubmit, categories, editing, onCancel }) {
   return (
     <form onSubmit={onSubmit} style={{ border: "1px solid #ddd", borderRadius: 10, padding: 12 }}>
       <div style={{ display: "grid", gap: 10, gridTemplateColumns: "1fr 1fr" }}>
@@ -69,9 +69,18 @@ export default function WarrantyForm({ form, onChange, onSubmit, categories }) {
         </label>
       </div>
 
-      <button type="submit" style={buttonStyle}>
-        Add Warranty
-      </button>
+      <div style={{ display: "flex", gap: 10, marginTop: 12 }}>
+        <button type="submit" style={buttonStyle}>
+          {editing ? "Save Changes" : "Add Warranty"}
+        </button>
+
+        {editing ? (
+          <button type="button" onClick={onCancel} style={cancelStyle}>
+            Cancel
+          </button>
+        ) : null}
+      </div>
+
     </form>
   );
 }
@@ -92,5 +101,13 @@ const buttonStyle = {
   border: "1px solid #111",
   background: "#111",
   color: "white",
+  cursor: "pointer",
+};
+
+const cancelStyle = {
+  padding: "10px 14px",
+  borderRadius: 10,
+  border: "1px solid #999",
+  background: "white",
   cursor: "pointer",
 };
