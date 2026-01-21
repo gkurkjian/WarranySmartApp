@@ -1,17 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { Container, Card } from "react-bootstrap";
+import WarrantyForm from "../components/WarrantyForm";
+import FiltersBar from "../components/FiltersBar";
+import WarrantyList from "../components/WarrantyList";
 
 const STORAGE_KEY = "warranty_items_v1";
-
 const CATEGORIES = ["All", "Electronics", "Appliances", "Furniture", "Automotive", "Other"];
-
-function daysLeft(expiresAt) {
-  // expiresAt expected "YYYY-MM-DD"
-  const end = new Date(expiresAt + "T00:00:00");
-  const now = new Date();
-  const diffMs = end.getTime() - now.getTime();
-  return Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-}
 
 function makeItem({ product, platform, category, purchaseDate, expiresAt, notes }) {
   return {
@@ -54,12 +47,10 @@ export default function Home() {
     notes: "",
   });
 
-  // load once
   useEffect(() => {
     setItems(loadItems());
   }, []);
 
-  // save on change
   useEffect(() => {
     if (typeof window !== "undefined") saveItems(items);
   }, [items]);
@@ -74,7 +65,6 @@ export default function Home() {
         const hay = `${it.product} ${it.platform}`.toLowerCase();
         return hay.includes(q);
       })
-      // sort: expiring soon first
       .sort((a, b) => new Date(a.expiresAt) - new Date(b.expiresAt));
   }, [items, search, category]);
 
@@ -86,7 +76,6 @@ export default function Home() {
   function addItem(e) {
     e.preventDefault();
 
-    // basic validation
     if (!form.product.trim()) return alert("Product is required.");
     if (!form.platform.trim()) return alert("Platform is required.");
     if (!form.purchaseDate) return alert("Purchase date is required.");
@@ -95,7 +84,6 @@ export default function Home() {
     const newItem = makeItem(form);
     setItems((prev) => [newItem, ...prev]);
 
-    // reset (keep category default)
     setForm((f) => ({
       product: "",
       platform: "",
@@ -111,136 +99,24 @@ export default function Home() {
   }
 
   return (
-    <Container className="py-4">
-      <h1 className="my-4">WarrantySmart</h1>
+    <main style={{ maxWidth: 900, margin: "0 auto", padding: 16, fontFamily: "system-ui" }}>
+      <h1 style={{ marginBottom: 8 }}>Warranty Smart App (MVP)</h1>
+      <p style={{ marginTop: 0, opacity: 0.75 }}>
+        Add warranties, search, filter, and keep them saved locally.
+      </p>
 
-      <Card bg="dark" text="light" className="p-4 border-secondary">
-        <Card.Body>
-          <h2>Add New Item</h2>
-          <form onSubmit={addItem}>
-            <div className="mb-3">
-              <label htmlFor="product" className="form-label">Product</label>
-              <input
-                type="text"
-                id="product"
-                name="product"
-                value={form.product}
-                onChange={handleChange}
-                style={inputStyle}
-              />
-            </div>
+      <WarrantyForm form={form} onChange={handleChange} onSubmit={addItem} categories={CATEGORIES} />
 
-            <div className="mb-3">
-              <label htmlFor="platform" className="form-label">Platform</label>
-              <input
-                type="text"
-                id="platform"
-                name="platform"
-                value={form.platform}
-                onChange={handleChange}
-                style={inputStyle}
-              />
-            </div>
+      <FiltersBar
+        search={search}
+        setSearch={setSearch}
+        category={category}
+        setCategory={setCategory}
+        categories={CATEGORIES}
+        count={filteredItems.length}
+      />
 
-            <div className="mb-3">
-              <label htmlFor="category" className="form-label">Category</label>
-              <select
-                id="category"
-                name="category"
-                value={form.category}
-                onChange={handleChange}
-                style={inputStyle}
-              >
-                {CATEGORIES.map((cat) => (
-                  <option key={cat} value={cat}>{cat}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className="mb-3">
-              <label htmlFor="purchaseDate" className="form-label">Purchase Date</label>
-              <input
-                type="date"
-                id="purchaseDate"
-                name="purchaseDate"
-                value={form.purchaseDate}
-                onChange={handleChange}
-                style={inputStyle}
-              />
-            </div>
-
-            <div className="mb-3">
-              <label htmlFor="expiresAt" className="form-label">Expires At</label>
-              <input
-                type="date"
-                id="expiresAt"
-                name="expiresAt"
-                value={form.expiresAt}
-                onChange={handleChange}
-                style={inputStyle}
-              />
-            </div>
-
-            <div className="mb-3">
-              <label htmlFor="notes" className="form-label">Notes (Optional)</label>
-              <textarea
-                id={"notes"}
-                name={"notes"}
-                value={form.notes}
-				onChange={handleChange}
-				style={{ ...inputStyle, height: 100 }}
-			/>
-            </div>
-
-            <button type={"submit"} style={{ ...buttonStyle, width: "100%" }}>
-              Add Item
-            </button>
-          </form>
-        </Card.Body>
-      </Card>
-
-      {/* Search and Filter */}
-      {/* Search and Filter */}
-      {/* Search and Filter */}
-      {/* Search and Filter */}
-      {/* Search and Filter */}
-      {/* Search and Filter */}
-      {/* Search and Filter */}
-      {/* Search and Filter */}
-      {/* Search and Filter */}
-      {/* Search and Filter */}
-
-    </Container>
-    
+      <WarrantyList items={filteredItems} onDelete={deleteItem} />
+    </main>
   );
 }
-
-const inputStyle = {
-  width: "100%",
-  padding: "10px 12px",
-  borderRadius: 10,
-  border: "1px solid #ddd",
-  marginTop: 6,
-  outline: "none",
-};
-
-const buttonStyle = {
-  marginTop: 12,
-  padding: "10px 14px",
-  borderRadius: 10,
-  border: "1px solid #111",
-  background: "#111",
-  color: "white",
-  cursor: "pointer",
-};
-
-const dangerStyle = {
-  padding: "8px 12px",
-  borderRadius: 10,
-  border: "1px solid #c00",
-  background: "white",
-  color: "#c00",
-  cursor: "pointer",
-  height: 38,
-  alignSelf: "start",
-};
