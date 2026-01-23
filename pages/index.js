@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import WarrantyForm from "../components/WarrantyForm";
 import FiltersBar from "../components/FiltersBar";
 import WarrantyList from "../components/WarrantyList";
+import Footer from "../components/Footer";
 
 const STORAGE_KEY = "warranty_items_v1";
 const CATEGORIES = ["All", "Electronics", "Appliances", "Furniture", "Automotive", "Other"];
