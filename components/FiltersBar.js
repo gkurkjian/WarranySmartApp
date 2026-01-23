@@ -1,3 +1,5 @@
+import { Form, Row, Col, Badge } from "react-bootstrap";
+
 export default function FiltersBar({
   search,
   setSearch,
@@ -7,40 +9,31 @@ export default function FiltersBar({
   count,
 }) {
   return (
-    <div
-      style={{
-        display: "flex",
-        gap: 10,
-        alignItems: "center",
-        marginTop: 14,
-        marginBottom: 10,
-        flexWrap: "wrap",
-      }}
-    >
-      <input
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        placeholder="Search product or platform…"
-        style={{ ...inputStyle, flex: "1 1 260px" }}
-      />
+    <Row className="mb-3 align-items-center">
+      <Col md={6} className="mb-2 mb-md-0">
+        <Form.Control
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="🔍 Search product or platform…"
+        />
+      </Col>
 
-      <select value={category} onChange={(e) => setCategory(e.target.value)} style={inputStyle}>
-        {categories.map((c) => (
-          <option key={c} value={c}>
-            {c}
-          </option>
-        ))}
-      </select>
+      <Col md={4} className="mb-2 mb-md-0">
+        <Form.Select value={category} onChange={(e) => setCategory(e.target.value)}>
+          {categories.map((c) => (
+            <option key={c} value={c}>
+              {c}
+            </option>
+          ))}
+        </Form.Select>
+      </Col>
 
-      <span style={{ opacity: 0.75 }}>{count} item(s)</span>
-    </div>
+      <Col md={2} className="text-md-end">
+        <Badge bg="secondary" className="fs-6">
+          {count} item{count !== 1 ? "s" : ""}
+        </Badge>
+      </Col>
+    </Row>
   );
 }
-
-const inputStyle = {
-  padding: "10px 12px",
-  borderRadius: 10,
-  border: "1px solid #ddd",
-  outline: "none",
-  minWidth: 220,
-};

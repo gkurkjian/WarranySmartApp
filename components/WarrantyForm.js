@@ -1,113 +1,99 @@
+import { Card, Form, Button, Row, Col } from "react-bootstrap";
+
 export default function WarrantyForm({ form, onChange, onSubmit, categories, editing, onCancel }) {
   return (
-    <form onSubmit={onSubmit} style={{ border: "1px solid #ddd", borderRadius: 10, padding: 12 }}>
-      <div style={{ display: "grid", gap: 10, gridTemplateColumns: "1fr 1fr" }}>
-        <label>
-          Product *
-          <input
-            name="product"
-            value={form.product}
-            onChange={onChange}
-            placeholder="MacBook Pro 14"
-            style={inputStyle}
-          />
-        </label>
+    <Card className="shadow-sm mb-4">
+      <Card.Body>
+        <h5 className="mb-3">{editing ? "Edit Warranty" : "Add New Warranty"}</h5>
+        <Form onSubmit={onSubmit}>
+          <Row>
+            <Col md={6}>
+              <Form.Group className="mb-3">
+                <Form.Label>Product *</Form.Label>
+                <Form.Control
+                  name="product"
+                  value={form.product}
+                  onChange={onChange}
+                  placeholder="MacBook Pro 14"
+                />
+              </Form.Group>
+            </Col>
 
-        <label>
-          Platform *
-          <input
-            name="platform"
-            value={form.platform}
-            onChange={onChange}
-            placeholder="Apple, Amazon, BestBuy"
-            style={inputStyle}
-          />
-        </label>
+            <Col md={6}>
+              <Form.Group className="mb-3">
+                <Form.Label>Platform *</Form.Label>
+                <Form.Control
+                  name="platform"
+                  value={form.platform}
+                  onChange={onChange}
+                  placeholder="Apple, Amazon, BestBuy"
+                />
+              </Form.Group>
+            </Col>
 
-        <label>
-          Category
-          <select name="category" value={form.category} onChange={onChange} style={inputStyle}>
-            {categories.filter((c) => c !== "All").map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
-        </label>
+            <Col md={4}>
+              <Form.Group className="mb-3">
+                <Form.Label>Category</Form.Label>
+                <Form.Select name="category" value={form.category} onChange={onChange}>
+                  {categories.filter((c) => c !== "All").map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+            </Col>
 
-        <label>
-          Purchase Date *
-          <input
-            type="date"
-            name="purchaseDate"
-            value={form.purchaseDate}
-            onChange={onChange}
-            style={inputStyle}
-          />
-        </label>
+            <Col md={4}>
+              <Form.Group className="mb-3">
+                <Form.Label>Purchase Date *</Form.Label>
+                <Form.Control
+                  type="date"
+                  name="purchaseDate"
+                  value={form.purchaseDate}
+                  onChange={onChange}
+                />
+              </Form.Group>
+            </Col>
 
-        <label>
-          Expires At *
-          <input
-            type="date"
-            name="expiresAt"
-            value={form.expiresAt}
-            onChange={onChange}
-            style={inputStyle}
-          />
-        </label>
+            <Col md={4}>
+              <Form.Group className="mb-3">
+                <Form.Label>Expires At *</Form.Label>
+                <Form.Control
+                  type="date"
+                  name="expiresAt"
+                  value={form.expiresAt}
+                  onChange={onChange}
+                />
+              </Form.Group>
+            </Col>
 
-        <label>
-          Notes (optional)
-          <input
-            name="notes"
-            value={form.notes}
-            onChange={onChange}
-            placeholder="Extra info…"
-            style={inputStyle}
-          />
-        </label>
-      </div>
+            <Col md={12}>
+              <Form.Group className="mb-3">
+                <Form.Label>Notes (optional)</Form.Label>
+                <Form.Control
+                  name="notes"
+                  value={form.notes}
+                  onChange={onChange}
+                  placeholder="Extra info…"
+                />
+              </Form.Group>
+            </Col>
+          </Row>
 
-      <div style={{ display: "flex", gap: 10, marginTop: 12 }}>
-        <button type="submit" style={buttonStyle}>
-          {editing ? "Save Changes" : "Add Warranty"}
-        </button>
+          <div className="d-flex gap-2">
+            <Button type="submit" variant="dark">
+              {editing ? "Save Changes" : "Add Warranty"}
+            </Button>
 
-        {editing ? (
-          <button type="button" onClick={onCancel} style={cancelStyle}>
-            Cancel
-          </button>
-        ) : null}
-      </div>
-
-    </form>
+            {editing && (
+              <Button type="button" variant="outline-secondary" onClick={onCancel}>
+                Cancel
+              </Button>
+            )}
+          </div>
+        </Form>
+      </Card.Body>
+    </Card>
   );
 }
-
-const inputStyle = {
-  width: "100%",
-  padding: "10px 12px",
-  borderRadius: 10,
-  border: "1px solid #ddd",
-  marginTop: 6,
-  outline: "none",
-};
-
-const buttonStyle = {
-  marginTop: 12,
-  padding: "10px 14px",
-  borderRadius: 10,
-  border: "1px solid #111",
-  background: "#111",
-  color: "white",
-  cursor: "pointer",
-};
-
-const cancelStyle = {
-  padding: "10px 14px",
-  borderRadius: 10,
-  border: "1px solid #999",
-  background: "white",
-  cursor: "pointer",
-};
