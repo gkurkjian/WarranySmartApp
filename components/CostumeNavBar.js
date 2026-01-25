@@ -1,14 +1,20 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { Navbar, Nav, Container, Button } from "react-bootstrap";
+import { supabase } from "../lib/supabaseClient";
+import { useSession } from "../lib/useSession";
 
 export default function CostumeNavBar() {
-  // TODO: In STEP 2, we'll get the actual session from Supabase
-  const session = null; // Placeholder for now
-  const user = session?.user;
+  const { session, user } = useSession();
+  const router = useRouter();
 
   async function handleLogout() {
-    // TODO: Implement Supabase logout in STEP 2
-    console.log("Logout clicked");
+    try {
+      await supabase.auth.signOut();
+      router.push("/");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
   }
 
   return (

@@ -1,22 +1,45 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { Container, Row, Col, Card, Form, Button, Alert } from "react-bootstrap";
+import { supabase } from "../lib/supabaseClient";
+import { useSession } from "../lib/useSession";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const { session } = useSession();
+
+  // If already logged in, redirect to dashboard
+  useEffect(() => {
+    if (session) {
+      router.push("/dashboard");
+    }
+  }, [session, router]);
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
     setLoading(true);
 
-    // TODO: Implement Supabase login in STEP 2
-    console.log("Login attempt:", { email, password });
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    setLoading(false);
+      if (error) throw error;
+
+      // Redirect to dashboard on success
+      router.push("/dashboard");
+    } catch (error) {
+      setError(error.message || "Failed to log in");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (

@@ -1,17 +1,31 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { Container, Row, Col, Card, Form, Button, Alert } from "react-bootstrap";
+import { supabase } from "../lib/supabaseClient";
+import { useSession } from "../lib/useSession";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const { session } = useSession();
+
+  // If already logged in, redirect to dashboard
+  useEffect(() => {
+    if (session) {
+      router.push("/dashboard");
+    }
+  }, [session, router]);
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
+    setSuccess("");
 
     // Validation
     if (password !== confirmPassword) {
@@ -24,10 +38,29 @@ export default function SignUp() {
 
     setLoading(true);
 
-    // TODO: Implement Supabase signup in STEP 2
-    console.log("Signup attempt:", { email, password });
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
 
-    setLoading(false);
+      if (error) throw error;
+
+      // Check if email confirmation is required
+      if (data?.user?.identities?.length === 0) {
+        setError("This email is already registered. Please log in instead.");
+      } else if (data.session) {
+        // Auto logged in (email confirmation disabled)
+        router.push("/dashboard");
+      } else {
+        // Email confirmation required
+        setSuccess("Account created! Please check your email to confirm your account.");
+      }
+    } catch (error) {
+      setError(error.message || "Failed to create account");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -39,6 +72,7 @@ export default function SignUp() {
               <h2 className="text-center mb-4">Create Account</h2>
 
               {error && <Alert variant="danger">{error}</Alert>}
+              {success && <Alert variant="success">{success}</Alert>}
 
               <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3">
